@@ -80,7 +80,7 @@ func GetCommands() map[string]CliCommand {
 		},
 		"map": {
 			name:        "map",
-			description: "Display the names of 20 areas",
+			description: "Display the next 20 areas",
 			callback:    CommandMap,
 		},
 		"mapb": {

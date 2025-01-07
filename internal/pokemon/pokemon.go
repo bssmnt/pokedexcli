@@ -20,7 +20,7 @@ func CatchPokemon(name string, client *pokeapi.Client) error {
 		return err
 	}
 
-	catchRoll := rand.Intn(pokemon.BaseExperience * 3)
+	catchRoll := rand.Intn(pokemon.BaseExperience * 2)
 
 	if catchRoll < pokemon.BaseExperience {
 		fmt.Printf("%s escaped!\n", name)
