@@ -74,7 +74,13 @@ func (c *Client) GetPokemonFromArea(area string) (PokemonAreaResponse, error) {
 	if err != nil {
 		return PokemonAreaResponse{}, err
 	}
-	defer resp.Body.Close()
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

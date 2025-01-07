@@ -111,7 +111,7 @@ func GetCommands() map[string]CliCommand {
 	}
 }
 
-func CommandHelp(cfg *Config, args ...string) error {
+func CommandHelp(*Config, ...string) error {
 	fmt.Println()
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println()
@@ -122,13 +122,13 @@ func CommandHelp(cfg *Config, args ...string) error {
 	return nil
 }
 
-func CommandExit(cfg *Config, args ...string) error {
+func CommandExit(*Config, ...string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func CommandMap(cfg *Config, args ...string) error {
+func CommandMap(cfg *Config, _ ...string) error {
 	resp, err := cfg.pokeapiClient.GetLocationAreas(cfg.Next)
 	if err != nil {
 		return err
@@ -144,7 +144,7 @@ func CommandMap(cfg *Config, args ...string) error {
 	return nil
 }
 
-func CommandMapB(cfg *Config, args ...string) error {
+func CommandMapB(cfg *Config, _ ...string) error {
 	if cfg.Previous == "" {
 		fmt.Println("You're on the first page!")
 		return nil
@@ -170,14 +170,14 @@ func CallbackExplore(cfg *Config, args ...string) error {
 		return fmt.Errorf("usage: explore <area-name>")
 	}
 
-	pokemon, err := cfg.pokeapiClient.GetPokemonFromArea(args[0])
+	poke, err := cfg.pokeapiClient.GetPokemonFromArea(args[0])
 	if err != nil {
 		return err
 	}
 
 	fmt.Printf("Exploring %s...\n", args[0])
 	fmt.Println("Found Pokemon:")
-	for _, encounter := range pokemon.PokemonEncounters {
+	for _, encounter := range poke.PokemonEncounters {
 		fmt.Printf("- %s\n", encounter.Pokemon.Name)
 	}
 	return nil
@@ -191,7 +191,7 @@ func CommandCatch(cfg *Config, args ...string) error {
 	return pokemon.CatchPokemon(args[0], cfg.pokeapiClient)
 }
 
-func CommandPokedex(cfg *Config, args ...string) error {
+func CommandPokedex(*Config, ...string) error {
 	caught := pokemon.CollectCaughtPokemon()
 	if len(caught) == 0 {
 		fmt.Println("Your Pokedex is still empty!")
@@ -206,7 +206,7 @@ func CommandPokedex(cfg *Config, args ...string) error {
 	return nil
 }
 
-func CommandInspect(cfg *Config, args ...string) error {
+func CommandInspect(_ *Config, args ...string) error {
 	if len(args) < 1 {
 		return fmt.Errorf("please provide the name of a Pokemon to inspect")
 	}
