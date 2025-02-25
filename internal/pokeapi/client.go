@@ -9,14 +9,14 @@ import (
 )
 
 type Client struct {
-	cache  *pokecache.Cache
-	client *http.Client
+	Cache  *pokecache.Cache
+	Client *http.Client
 }
 
 func NewClient(cacheInterval time.Duration) *Client {
 	return &Client{
-		cache:  pokecache.NewCache(cacheInterval),
-		client: &http.Client{},
+		Cache:  pokecache.NewCache(cacheInterval),
+		Client: &http.Client{},
 	}
 }
 
@@ -25,13 +25,13 @@ func (c *Client) GetLocationAreas(url string) (LocationAreaList, error) {
 		url = "https://pokeapi.co/api/v2/location-area"
 	}
 
-	if cached, ok := c.cache.Get(url); ok {
+	if cached, ok := c.Cache.Get(url); ok {
 		locationResp := LocationAreaList{}
 		err := json.Unmarshal(cached, &locationResp)
 		return locationResp, err
 	}
 
-	resp, err := c.client.Get(url)
+	resp, err := c.Client.Get(url)
 	if err != nil {
 		return LocationAreaList{}, err
 	}
@@ -48,7 +48,7 @@ func (c *Client) GetLocationAreas(url string) (LocationAreaList, error) {
 		return LocationAreaList{}, err
 	}
 
-	c.cache.Add(url, body)
+	c.Cache.Add(url, body)
 
 	locationResp := LocationAreaList{}
 	err = json.Unmarshal(body, &locationResp)
@@ -64,7 +64,7 @@ func (c *Client) GetPokemonFromArea(area string) (PokemonAreaResponse, error) {
 	baseURL := "https://pokeapi.co/api/v2/location-area/"
 	fullURL := baseURL + area
 
-	if cached, ok := c.cache.Get(fullURL); ok {
+	if cached, ok := c.Cache.Get(fullURL); ok {
 		locationResp := PokemonAreaResponse{}
 		err := json.Unmarshal(cached, &locationResp)
 		return locationResp, err
@@ -87,7 +87,7 @@ func (c *Client) GetPokemonFromArea(area string) (PokemonAreaResponse, error) {
 		return PokemonAreaResponse{}, err
 	}
 
-	c.cache.Add(fullURL, body)
+	c.Cache.Add(fullURL, body)
 	locationResp := PokemonAreaResponse{}
 	err = json.Unmarshal(body, &locationResp)
 	if err != nil {
@@ -100,7 +100,7 @@ func (c *Client) GetPokemonFromArea(area string) (PokemonAreaResponse, error) {
 func (c *Client) GetPokemon(name string) (Pokemon, error) {
 	endpoint := "https://pokeapi.co/api/v2/pokemon/" + name
 
-	if data, ok := c.cache.Get(endpoint); ok {
+	if data, ok := c.Cache.Get(endpoint); ok {
 		pokemon := Pokemon{}
 		err := json.Unmarshal(data, &pokemon)
 		if err != nil {
@@ -109,7 +109,7 @@ func (c *Client) GetPokemon(name string) (Pokemon, error) {
 		return pokemon, nil
 	}
 
-	resp, err := c.client.Get(endpoint)
+	resp, err := c.Client.Get(endpoint)
 	if err != nil {
 		return Pokemon{}, err
 	}
@@ -126,7 +126,7 @@ func (c *Client) GetPokemon(name string) (Pokemon, error) {
 		return Pokemon{}, err
 	}
 
-	c.cache.Add(endpoint, data)
+	c.Cache.Add(endpoint, data)
 
 	pokemon := Pokemon{}
 	err = json.Unmarshal(data, &pokemon)

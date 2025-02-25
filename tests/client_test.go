@@ -1,7 +1,8 @@
-package pokeapi
+package tests
 
 import (
 	"net/http"
+	"pokedexcli/internal/pokeapi"
 	"pokedexcli/internal/pokecache"
 	"reflect"
 	"testing"
@@ -20,14 +21,14 @@ func TestClient_GetLocationAreas(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    LocationAreaList
+		want    pokeapi.LocationAreaList
 		wantErr bool
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
-				cache:  tt.fields.cache,
-				client: tt.fields.client,
+			c := &pokeapi.Client{
+				Cache:  tt.fields.cache,
+				Client: tt.fields.client,
 			}
 			got, err := c.GetLocationAreas(tt.args.url)
 			if (err != nil) != tt.wantErr {
@@ -53,14 +54,14 @@ func TestClient_GetPokemon(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    Pokemon
+		want    pokeapi.Pokemon
 		wantErr bool
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
-				cache:  tt.fields.cache,
-				client: tt.fields.client,
+			c := &pokeapi.Client{
+				Cache:  tt.fields.cache,
+				Client: tt.fields.client,
 			}
 			got, err := c.GetPokemon(tt.args.name)
 			if (err != nil) != tt.wantErr {
@@ -86,14 +87,14 @@ func TestClient_GetPokemonFromArea(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    PokemonAreaResponse
+		want    pokeapi.PokemonAreaResponse
 		wantErr bool
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
-				cache:  tt.fields.cache,
-				client: tt.fields.client,
+			c := &pokeapi.Client{
+				Cache:  tt.fields.cache,
+				Client: tt.fields.client,
 			}
 			got, err := c.GetPokemonFromArea(tt.args.area)
 			if (err != nil) != tt.wantErr {
@@ -114,11 +115,11 @@ func TestNewClient(t *testing.T) {
 	var tests []struct {
 		name string
 		args args
-		want *Client
+		want *pokeapi.Client
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewClient(tt.args.cacheInterval); !reflect.DeepEqual(got, tt.want) {
+			if got := pokeapi.NewClient(tt.args.cacheInterval); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewClient() = %v, want %v", got, tt.want)
 			}
 		})
